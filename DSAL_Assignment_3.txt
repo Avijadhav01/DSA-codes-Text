@@ -1,0 +1,173 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Node {
+public:
+    Node* left;
+    Node* right;
+    string data;
+
+    Node(string data) {
+        this->data = data;
+        left = NULL;
+        right = NULL;
+    }
+
+    void addNode(Node* data) {
+        if (left == NULL) {
+            left = data;
+        } else {
+            Node* temp = left;
+            while (temp->right != NULL) {
+                temp = temp->right;
+            }
+            temp->right = data;
+        }
+    }
+
+    void displayTree(int level = 0) {
+        for (int i = 0; i < level; i++) {
+            cout << "  ";  // Better indentation
+        }
+        cout << data << endl;
+
+        if (left != NULL) {
+            left->displayTree(level + 1);
+        }
+
+        if (right != NULL) {
+            right->displayTree(level);
+        }
+    }
+
+    Node* findNode(string& nodeData) {
+        if (data == nodeData) {
+            return this;
+        }
+
+        if (left != NULL) {
+            Node* found = left->findNode(nodeData);
+            if (found != NULL) {
+                return found;
+            }
+        }
+
+        if (right != NULL) {
+            return right->findNode(nodeData);
+        }
+        return NULL;
+    }
+
+    bool deleteNode(string& nodeData) {
+        Node* prev = NULL;
+        Node* curr = left;
+
+        while (curr != NULL) {
+            if (curr->data == nodeData) {
+                if (prev == NULL) {
+                    left = curr->right;
+                } else {
+                    prev->right = curr->right;
+                }
+                delete curr;
+                return true;
+            }
+
+            if (curr->deleteNode(nodeData)) {
+                return true;
+            }
+
+            prev = curr;
+            curr = curr->right;
+        }
+
+        return false;
+    }
+};
+
+void menu(Node* root) {
+    int ch;
+    while (true) {
+        cout << "\nMenu: " << endl;
+        cout << "1. Add Node" << endl;
+        cout << "2. Delete Node" << endl;
+        cout << "3. Print Tree" << endl;
+        cout << "4. Exit" << endl;
+        cout << "\nEnter Your Choice : ";
+        cin >> ch;
+        cin.ignore(); // Important to clear newline from the buffer before getline()
+
+        switch (ch) {
+        case 1: {
+            string parentName, newNodename;
+            cout << "Enter parent node name: ";
+            getline(cin, parentName);
+
+            Node* parentNode = root->findNode(parentName);
+
+            if (parentNode == NULL) {
+                cout << "No Parent Node found!" << endl;
+            } else {
+                cout << "Enter new Node Name: ";
+                getline(cin, newNodename);
+
+                Node* newNode = new Node(newNodename);
+                parentNode->addNode(newNode);
+
+                cout << "Node added successfully!" << endl;
+            }
+            break;
+        }
+
+        case 2: {
+            string node;
+            cout << "Enter node to delete : ";
+            getline(cin, node);
+
+            if (root->data == node) {
+                cout << "Cannot delete root node." << endl;
+            } else {
+                bool isDeleted = root->deleteNode(node);
+                if (isDeleted) {
+                    cout << "Node deleted successfully!" << endl;
+                } else {
+                    cout << "Node not found!" << endl;
+                }
+            }
+            break;
+        }
+
+        case 3:
+            cout << "\n--- Tree Structure ---" << endl;
+            root->displayTree();
+            break;
+
+        case 4:
+            cout << "Exiting..." << endl;
+            return;  // Exiting menu loop
+            break;
+
+        default:
+            cout << "Enter Valid choice!!" << endl;
+            break;
+        }
+    }
+}
+
+int main() {
+    Node* book = new Node("Book");
+    menu(book);
+    delete book;
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+

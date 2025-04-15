@@ -1,0 +1,143 @@
+Experiment 11 
+Input :-  
+#include<iostream> 
+#include<fstream> #include<string> using namespace std; 
+class student {     struct stud {         int roll;         string name;         char div;         string add; 
+    } rec; 
+public:     void create();     void display();     int search(); 
+    void Delete(); 
+}; 
+void student::create() {     char ans; 
+    ofstream fout("stud.txt", ios::out);     do { 
+        cout << "\n\tEnter Roll No of Student    : ";         cin >> rec.roll; 
+        cout << "\n\tEnter Name of Student     : ";         cin >> rec.name; 
+        cout << "\n\tEnter Division of Student : ";         cin >> rec.div; 
+        cout << "\n\tEnter Address of Student  : "; 
+        cin >> rec.add; 
+        fout << rec.roll << " " << rec.name << " " << rec.div << " " << rec.add << endl;         cout << "\n\tDo You Want to Add More Records (y/n)? ";         cin >> ans; 
+    } while (ans == 'y' || ans == 'Y');     fout.close(); 
+} 
+void student::display() {     ifstream fin("stud.txt", ios::in);     cout << "\n\tThe Content of File are:\n";     cout << "\n\tRoll\tName\tDiv\tAddress"; 
+    while (fin >> rec.roll >> rec.name >> rec.div >> rec.add) { 
+        cout << "\n\t" << rec.roll << "\t" << rec.name << "\t" << rec.div << "\t" << rec.add; 
+    } 
+    fin.close(); 
+} 
+int student::search() { 
+    int r; 
+    ifstream fin("stud.txt", ios::in);     cout << "\n\tEnter a Roll No: ";     cin >> r; 
+    while (fin >> rec.roll >> rec.name >> rec.div >> rec.add) {         if (rec.roll == r) { 
+            cout << "\n\tRecord Found...\n";             cout << "\n\tRoll\tName\tDiv\tAddress"; 
+            cout << "\n\t" << rec.roll << "\t" << rec.name << "\t" << rec.div << "\t" << rec.add;             fin.close();             return r; 
+        }     }     fin.close(); 
+    return 0; 
+} 
+void student::Delete() { 
+    int r; 
+    cout << "\n\tEnter Roll No to Delete: ";     cin >> r; 
+    ifstream fin("stud.txt", ios::in);     ofstream fout("temp.txt", ios::out);     bool found = false; 
+    while (fin >> rec.roll >> rec.name >> rec.div >> rec.add) {         if (rec.roll == r) {             found = true; 
+        } else { 
+            fout << rec.roll << " " << rec.name << " " << rec.div << " " << rec.add << endl; 
+        }     }     fin.close();     fout.close();     remove("stud.txt");     rename("temp.txt", "stud.txt"); 
+    if (found) { 
+        cout << "\n\tRecord Deleted"; 
+    } else { 
+        cout << "\n\tRecord Not Found"; 
+    } 
+} 
+int main() {     student obj;     int ch;     char ans;     do { 
+        cout << "\n\t***** Student Information *****"; 
+        cout << "\n\t1. Create\n\t2. Display\n\t3. Delete\n\t4. Search\n\t5. Exit";         cout << "\n\t..... Enter Your Choice: ";         cin >> ch;         switch (ch) { 
+            case 1: obj.create(); break;             case 2: obj.display(); break;             case 3: obj.Delete(); break;             case 4: 
+                if (obj.search() == 0) { 
+                    cout << "\n\tRecord Not Found...\n"; 
+                }                 break;             case 5: return 0; 
+        } 
+        cout << "\n\t..... Do You Want to Continue in Main Menu (y/n)? ";         cin >> ans; 
+    } while (ans == 'y' || ans == 'Y');     return 0; 
+} 
+Output :-  
+        ***** Student Information ***** 
+1.	Create 
+2.	Display 
+3.	Delete 
+4.	Search 
+5.	Exit 
+        ..... Enter Your Choice: 1 
+        Enter Roll No of Student    : 38 
+        Enter Name of Student     : Sanved 
+        Enter Division of Student : A 
+        Enter Address of Student  : Akola 
+        Do You Want to Add More Records (y/n)? y 
+        Enter Roll No of Student    : 39 
+        Enter Name of Student     : Aayush         Enter Division of Student : A 
+        Enter Address of Student  : Nashik 
+        Do You Want to Add More Records (y/n)? y 
+        Enter Roll No of Student    : 37 
+        Enter Name of Student     : Anushka 
+        Enter Division of Student : B 
+        Enter Address of Student  : Pune 
+        Do You Want to Add More Records (y/n)? y 
+        Enter Roll No of Student    : 40 
+        Enter Name of Student     : Sarthak 
+        Enter Division of Student : C 
+        Enter Address of Student  : Satara 
+        Do You Want to Add More Records (y/n)? n 
+        ..... Do You Want to Continue in Main Menu (y/n)? y 
+        ***** Student Information ***** 
+1.	Create 
+2.	Display 
+3.	Delete 
+4.	Search 
+5.	Exit 
+        ..... Enter Your Choice: 2 
+        The Content of File are: 
+        Roll    Name    Div     Address 
+38	Sanved  A       Akola 
+39	Aayush  A       Nashik 
+        37      Anushka B       Pune 
+        40      Sarthak C       Satara 
+        ..... Do You Want to Continue in Main Menu (y/n)? y 
+        ***** Student Information ***** 
+1.	Create 
+2.	Display 
+3.	Delete 
+4.	Search 
+5.	Exit 
+        ..... Enter Your Choice: 3 
+        Enter Roll No to Delete: 37 
+        Record Deleted 
+        ..... Do You Want to Continue in Main Menu (y/n)? y 
+        ***** Student Information ***** 
+1.	Create 
+2.	Display 
+3.	Delete 
+4.	Search 
+5.	Exit 
+        ..... Enter Your Choice: 2 
+        The Content of File are: 
+        Roll    Name    Div     Address 
+38	Sanved  A       Akola 
+39	Aayush  A       Nashik 
+40	Sarthak C       Satara 
+        ..... Do You Want to Continue in Main Menu (y/n)? y 
+        ***** Student Information ***** 
+1.	Create 
+2.	Display 
+3.	Delete 
+4.	Search 
+5.	Exit 
+        ..... Enter Your Choice: 4 
+        Enter a Roll No: 38 
+        Record Found... 
+        Roll    Name    Div     Address 
+        38      Sanved  A       Akola 
+        ..... Do You Want to Continue in Main Menu (y/n)? y 
+        ***** Student Information ***** 
+1.	Create 
+2.	Display 
+3.	Delete 
+4.	Search 
+5.	Exit 
+        ..... Enter Your Choice: 5

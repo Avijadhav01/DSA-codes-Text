@@ -1,0 +1,271 @@
+Assignment 5:
+
+INPUT:
+#include <iostream>
+using namespace std;
+class TBT;
+class node
+{
+    node *left, *right;
+    int data;
+    bool rbit, lbit;
+
+public:
+    node()
+    {
+        left = NULL;
+        right = NULL;
+        rbit = lbit = 0;
+    }
+    node(int d)
+    {
+        left = NULL;
+        right = NULL;
+        rbit = lbit = 0;
+        data = d;
+    }
+    friend class TBT;
+};
+
+class TBT
+{
+    node *root; // acts as a dummy node
+public:
+    TBT() // dummy node initialization
+    {
+        root = new node(9999);
+        root->left = root;
+        root->rbit = 1;
+        root->lbit = 0;
+        root->right = root;
+    }
+    void create();
+    void insert(int data);
+    node *inorder_suc(node *);
+    void inorder_traversal();
+    node *preorder_suc(node *c);
+    void preorder_traversal();
+};
+void TBT::preorder_traversal()
+{
+    node *c = root->left;
+    while (c != root)
+    {
+        cout << " " << c->data;
+        c = preorder_suc(c);
+    }
+}
+void TBT::inorder_traversal()
+{
+    node *c = root->left;
+    while (c->lbit == 1)
+        c = c->left;
+    while (c != root)
+    {
+        cout << " " << c->data;
+        c = inorder_suc(c);
+    }
+}
+node *TBT::inorder_suc(node *c)
+{
+    if (c->rbit == 0)
+        return c->right;
+    else
+        c = c->right;
+    while (c->lbit == 1)
+    {
+        c = c->left;
+    }
+    return c;
+}
+node *TBT::preorder_suc(node *c)
+{
+    if (c->lbit == 1)
+    {
+        return c->left;
+    }
+    while (c->rbit == 0)
+    {
+        c = c->right;
+    }
+    return c->right;
+}
+//-------- Create Method
+void TBT::create()
+{
+    int n;
+    cout << "\nEnter number of nodes:";
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        int info;
+        cout << "\nEnter data: ";
+        cin >> info;
+        this->insert(info);
+    }
+}
+void TBT::insert(int data)
+{
+
+    if (root->left == root && root->right == root) // no node in tree
+    {
+        node *p = new node(data);
+        p->left = root->left;
+        p->lbit = root->lbit; // 0
+        p->rbit = 0;
+        p->right = root->right;
+        root->left = p;
+        root->lbit = 1;
+        cout << "\nInserted start" << data;
+        return;
+    }
+    node *cur = new node;
+    cur = root->left;
+    while (1)
+    {
+
+        if (cur->data < data) // insert right
+        {
+            node *p = new node(data);
+            if (cur->rbit == 0)
+            {
+                p->right = cur->right;
+                p->rbit = cur->rbit;
+                p->lbit = 0;
+                p->left = cur;
+                cur->rbit = 1;
+                cur->right = p;
+                cout << "\nInserted right " << data;
+                return;
+            }
+            else
+                cur = cur->right;
+        }
+        if (cur->data > data) // insert left
+        {  node *p = new node(data);
+            if (cur->lbit == 0)
+            {
+                p->left = cur->left;
+                p->lbit = cur->lbit;
+                p->rbit = 0;
+                p->right = cur; // successor
+                cur->lbit = 1;
+                cur->left = p;
+                cout << "\nInserted left" << data;
+                return;
+            }
+            else
+                cur = cur->left;
+        }
+    }
+}
+
+int main()
+{  TBT t1;
+    int value;
+    int choice;
+    do
+    {
+        cout << "\n-------------------------\n\t1.Create Tree\n\t2.Insert into tree\n\t3.Preorder\n\t4.Inorder\n\t5.Exit\n-------------------------\n\nEnter your choice: ";
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+            t1.create();
+            break;
+        case 2:
+            cout << "\nEnter Number(data): ";
+            cin >> value;
+            t1.insert(value);
+            break;
+        case 3:
+            cout << "\nPreorder traversal of TBT\n";
+            t1.preorder_traversal();
+            break;
+        case 4:
+            cout << "\nInoder Traversal of TBT\n";
+            t1.inorder_traversal();
+            break;
+        case 5:
+            break;
+        default:
+            cout << "\nWrong choice";
+        } } while (choice != -1);
+
+    return 0;
+}
+
+
+OUTPUT:
+-------------------------
+        1.Create Tree
+        2.Insert into tree
+        3.Preorder
+        4.Inorder
+        5.Exit
+-------------------------
+Enter your choice: 1
+Enter number of nodes:4
+Enter data: 20
+Inserted start20
+Enter data: 15
+Inserted left15
+Enter data: 30
+Inserted right 30
+Enter data: 25
+Inserted left25
+-------------------------
+        1.Create Tree
+        2.Insert into tree
+        3.Preorder
+        4.Inorder
+        5.Exit
+-------------------------
+Enter your choice: 35
+Wrong choice
+-------------------------
+        1.Create Tree
+        2.Insert into tree
+        3.Preorder
+        4.Inorder
+        5.Exit
+-------------------------
+Enter your choice: 2
+Enter Number(data): 35
+Inserted right 35
+-------------------------
+        1.Create Tree
+        2.Insert into tree
+        3.Preorder
+        4.Inorder
+        5.Exit
+-------------------------
+Enter your choice: 3
+Preorder traversal of TBT
+ 20 15 30 25 35
+-------------------------
+        1.Create Tree
+        2.Insert into tree
+        3.Preorder
+        4.Inorder
+        5.Exit
+-------------------------
+
+Enter your choice: 4
+Inoder Traversal of TBT
+ 15 20 25 30 35
+-------------------------
+        1.Create Tree
+        2.Insert into tree
+        3.Preorder
+        4.Inorder
+        5.Exit
+-------------------------
+Enter your choice: -1
+END
+
+
+
+
+
+
